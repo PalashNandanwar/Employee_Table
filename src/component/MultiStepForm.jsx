@@ -37,7 +37,13 @@ const MultiStepForm = ({ setShowForm, employee }) => {
         benefits: ""
     });
 
-    const nextStep = () => setStep((prev) => prev + 1);
+    const nextStep = () => {
+        if (validateStep()) {
+            setStep(prev => prev + 1);
+        } else {
+            alert("Please fill all required fields before proceeding.");
+        }
+    };
     const prevStep = () => setStep((prev) => prev - 1);
 
     const handleChange = (e) => {
@@ -85,7 +91,16 @@ const MultiStepForm = ({ setShowForm, employee }) => {
         }
     };
 
+    const requiredFields = {
+        1: ["firstName", "lastName", "displayName", "gender", "dob", "workEmail", "email", "mobile", "password"],
+        2: ["jobTitle", "department", "location", "workMode", "reportingManager", "jobDescription"],
+        3: ["employmentType", "workShift", "workingHours", "workExperience", "officeAddress", "workAuthorization"],
+        4: ["salary", "bonus", "currency", "paymentFrequency", "stockOptions", "benefits"]
+    };
 
+    const validateStep = () => {
+        return requiredFields[step].every(field => formData[field] && formData[field].trim() !== "");
+    };
 
 
     const handleCancel = () => {
